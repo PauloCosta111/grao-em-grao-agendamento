@@ -9,7 +9,13 @@ Comunicação lenta e controle de agenda feito em planilhas.
 Sistema de agendamento de consultas com contato via WhatsApp.
 
 ## Tecnologias
-(preencha com a tecnologia escolhida)
+- Python 3 com Flask
+- SQLite (banco de dados)
+- pytest (testes automatizados)
+- GitHub Actions (integração contínua)
+
 
 ## Como rodar
-(será preenchido durante o desenvolvimento)
+1. Clone o repositório: `git clone https://github.com/PauloCosta111/grao-em-grao-agendamento.git`
+2. Instale as dependências: `pip install -r requirements.txt`
+3. Execute o projeto: `python app.py`
