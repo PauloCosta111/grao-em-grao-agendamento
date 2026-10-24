@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from validacao import validar_agendamento
 
 app = Flask(__name__)
@@ -7,7 +7,7 @@ agendamentos = []
 
 @app.route("/")
 def inicio():
-    return "Grão em Grão - Agendamento"
+    return render_template("index.html")
 
 
 @app.route("/agendamentos", methods=["GET"])

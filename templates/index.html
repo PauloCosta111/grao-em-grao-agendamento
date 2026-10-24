@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grão em Grão - Agendamento</title>
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 18px; max-width: 600px;
+           margin: 20px auto; padding: 0 16px; background: #fff; color: #222; }
+    h1, h2 { color: #1a5276; }
+    label { display: block; margin-top: 12px; font-weight: bold; }
+    input { width: 100%; padding: 10px; font-size: 1em; box-sizing: border-box; }
+    button { padding: 10px 16px; font-size: 1em; margin: 12px 8px 0 0; cursor: pointer; }
+    #mensagem { margin-top: 12px; font-weight: bold; }
+    li { margin-bottom: 8px; }
+    :focus { outline: 3px solid #e67e22; }
+    body.alto-contraste { background: #000; color: #fff; }
+    body.alto-contraste h1, body.alto-contraste h2 { color: #ffff00; }
+    body.alto-contraste input, body.alto-contraste button { background: #fff; color: #000; }
+  </style>
+</head>
+<body>
+  <h1>Grão em Grão - Agendamento</h1>
+
+  <section aria-label="Acessibilidade">
+    <button type="button" onclick="mudarFonte(2)">A+ Aumentar letra</button>
+    <button type="button" onclick="mudarFonte(-2)">A- Diminuir letra</button>
+    <button type="button" onclick="alternarContraste()">Alto contraste</button>
+  </section>
+
+  <h2>Novo agendamento</h2>
+  <label for="nome_responsavel">Nome do responsável</label>
+  <input id="nome_responsavel" type="text">
+  <label for="nome_crianca">Nome da criança</label>
+  <input id="nome_crianca" type="text">
+  <label for="data">Data</label>
+  <input id="data" type="date">
+  <label for="horario">Horário</label>
+  <input id="horario" type="time">
+  <button type="button" onclick="agendar()">Agendar</button>
+  <p id="mensagem" role="status" aria-live="polite"></p>
+
+  <h2>Agendamentos</h2>
+  <ul id="lista"></ul>
+
+  <script>
+    let tamanho = 18;
+
+    function mudarFonte(valor) {
+      tamanho = Math.min(32, Math.max(14, tamanho + valor));
+      document.body.style.fontSize = tamanho + "px";
+    }
+
+    function alternarContraste() {
+      document.body.classList.toggle("alto-contraste");
+    }
+
+    async function carregarLista() {
+      const resposta = await fetch("/agendamentos");
+      const dados = await resposta.json();
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
+      dados.forEach(function (item) {
+        const li = document.createElement("li");
+        li.textContent = item.nome_crianca + " (responsável: " +
+          item.nome_responsavel + ") - " + item.data + " às " + item.horario;
+        lista.appendChild(li);
+      });
+    }
+
+    async function agendar() {
+      const campos = ["nome_responsavel", "nome_crianca", "data", "horario"];
+      const dados = {};
+      campos.forEach(function (campo) {
+        dados[campo] = document.getElementById(campo).value;
+      });
+      const resposta = await fetch("/agendamentos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
+      });
+      const resultado = await resposta.json();
+      const mensagem = document.getElementById("mensagem");
+      if (resposta.ok) {
+        mensagem.textContent = "Agendamento realizado com sucesso!";
+        campos.forEach(function (campo) {
+          document.getElementById(campo).value = "";
+        });
+        carregarLista();
+      } else {
+        mensagem.textContent = "Erro: " + resultado.erro;
+      }
+    }
+
+    carregarLista();
+  </script>
+</body>
+</html>
