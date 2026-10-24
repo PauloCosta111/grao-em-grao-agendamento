@@ -19,3 +19,7 @@ Sistema de agendamento de consultas com contato via WhatsApp.
 1. Clone o repositório: `git clone https://github.com/PauloCosta111/grao-em-grao-agendamento.git`
 2. Instale as dependências: `pip install -r requirements.txt`
 3. Execute o projeto: `python app.py`
+
+
+## Como rodar os testes
+Execute `pytest` na pasta do projeto.
