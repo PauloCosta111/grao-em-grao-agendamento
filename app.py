@@ -10,6 +10,11 @@ def inicio():
     return render_template("index.html")
 
 
+@app.route("/health")
+def health():
+    return {"status": "ok"}, 200
+
+
 @app.route("/agendamentos", methods=["GET"])
 def listar():
     return jsonify(agendamentos)
